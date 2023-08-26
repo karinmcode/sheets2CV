@@ -98,7 +98,6 @@ def formatData(DF):
     # Create an experience dataframe
     exp_df = df.loc['Professional experience']
     exp_df = exp_df.reset_index(drop = True)
-    exp_df = exp_df.drop(columns=['logo'])
     exp_df = exp_df.set_index('fieldname')
 
 
