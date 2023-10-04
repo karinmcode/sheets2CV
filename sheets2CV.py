@@ -12,20 +12,22 @@ import re
 import os
 
 
+
 # STEP 1: Read the Google Sheet data as dataframe
 def get_data_from_sheet(sheet_id: str):
     
-    sheet_name = 'data'
-    sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-    
-    DF = pd.read_csv(sheet_url)
-    data = formatData(DF)
-    
+    # Get params
     sheet_name = 'params'
-    sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+    sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'    
     
     PARAMS = getParams(sheet_url)
-    return DF, data, PARAMS
+    
+    # Get data
+
+    DATA, DF= getData(sheet_id,PARAMS)
+    
+    
+    return DATA, PARAMS
 
 def getParams(sheet_url):
     DF = pd.read_csv(sheet_url)
@@ -57,6 +59,9 @@ def getParams(sheet_url):
             
         params['template_path'] = "templates/"+params['template_name']
         
+        # set default params 
+        params['sheet']='data'
+        
         params_data = DF['params'][i]
         params_list = params_data.split(';')
         
@@ -65,12 +70,34 @@ def getParams(sheet_url):
                 param_name = item.split('=')[0]
                 param_value = item.split('=')[1]
                 params[param_name]=param_value
-                
+        
+        
+
+        # check that color is well defined
+        if params['color'][0]=='#':
+            HEX = params['color']
+            RGB = hex2rgb(HEX)
+            params['color_rgb'] = RGB
+            params['color_hex'] = HEX
+        
+        
         PARAMS.append(params)
     
     
     return PARAMS
 
+def getData(sheet_id,PARAMS):
+    
+    DATA = []
+    
+    for params in PARAMS:
+        sheet_name = params["sheet"]
+        sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+        DF = pd.read_csv(sheet_url)
+        data= formatData(DF)
+        DATA.append(data)
+        
+    return DATA,DF
 
 def formatData(DF):
     
@@ -154,7 +181,11 @@ def formatData(DF):
         
         exp_dict.append(thisexp_dict)
 
- 
+        # Extract and process achievements
+        those_achievements = [index for index in allrows if index.startswith(f'item{i}_achievements') ]
+        nach = len(those_achievements)
+        if nach !=0:
+            thisexp_dict['achievements'] = this_exp.loc[f'item{i}_achievements','fieldvalue']
                 
     ####
     # key_skills
@@ -204,10 +235,10 @@ def formatData(DF):
     return data
 
 # STEP 2: Populate the CV using ReportLab
-def generate_cv(data, PARAMS):
+def generate_cv(DATA, PARAMS):
     
 
-    for params in PARAMS:
+    for params,data in zip(PARAMS,DATA):
         module_path = params['template_path']
 
         module_path = module_path.replace('/','.').replace('.py', '')
@@ -220,27 +251,32 @@ def generate_cv(data, PARAMS):
         os.system(f"open {params['save_path']}")
         print("=== > CV Created Successfully! ____ "+ params['save_path'])
 
-    
+def hex2rgb(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))    
 
 
 # Main function
 def main(**kwargs):
     # Provide the shareable link of the google sheet in this format after "gviz/tq?tqx=out:csv&sheet=":
-        
+    
+    
     if 'sheet_id' in kwargs:
         sheet_id = kwargs['sheet_id']
     else:
-        sheet_id = '1Kkdkra9Yoli7kWrP8TaMRjocRR29Kz2PYxHkYLrUzXo'
-    
+        sheet_id = '1Kkdkra9Yoli7kWrP8TaMRjocRR29Kz2PYxHkYLrUzXo'# github sheet
+        sheet_id = '1pWPaT7KlnJKEzZf2hBt716YtVEOcr6f2l7rAe8MFKP8'# personal sheet
+
     print("===== 1/2) GET DATA FROM SHEET ....")
-    DFraw , data, params = get_data_from_sheet(sheet_id)
+    DATA, PARAMS = get_data_from_sheet(sheet_id)
     
     
     print("===== 2/2) GENERATE CV ....")
-    generate_cv( data, params )
+    generate_cv( DATA, PARAMS )
 
 
 
 
 if __name__ == "__main__":
+    
     main()
