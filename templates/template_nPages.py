@@ -301,7 +301,11 @@ def addEvent(elements,date1,date2,position,location,params,**kwargs):
     elements.append(p)    
     
     ## MAKE DATE VARIABLES
-    dates = str(round(date1))+'-'+str(round(date2))
+    if date1 == date2:
+        dates = str(round(date1))
+    else:
+        dates = str(round(date1))+'-'+str(round(date2))
+        
     logo_cal = changeLogo("icons/calendar.png",params['gray_level'])
     p_date = Paragraph('  '+dates, styles['dates'])
     
