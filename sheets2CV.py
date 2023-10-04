@@ -60,7 +60,8 @@ def getParams(sheet_url):
         params['template_path'] = "templates/"+params['template_name']
         
         # set default params 
-        params['sheet']='data'
+        params['sheet']=DF['sheet_name'][i]
+        
         
         params_data = DF['params'][i]
         params_list = params_data.split(';')
