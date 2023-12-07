@@ -3,7 +3,7 @@
 This Python script is designed to help users fetch CV (Curriculum Vitae) data from a Google Sheet and generate a PDF version of the CV using the ReportLab Python library.
 
 <div align="center">
-    <img src="https://github.com/karinmcode/sheets2CV/blob/main/icons/example_cv.png?raw=true" width="400">
+    <img src="https://github.com/karinmcode/sheets2CV/blob/main/icons/example_CV.png?raw=true" width="400">
 </div>
 
 ## How it works:
