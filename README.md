@@ -17,7 +17,7 @@ This Python script is designed to help users fetch CV (Curriculum Vitae) data fr
 
 ## Usage:
 
-To use this tool, follow the steps on this [Google Colab](https://colab.research.google.com/drive/1TlZdNDkT2mwvZ8epSRwe8B-JO7R1N5z9#scrollTo=QpOVmbUjR8De).
+To use this tool, follow the steps on this <a href="https://colab.research.google.com/drive/1TlZdNDkT2mwvZ8epSRwe8B-JO7R1N5z9#scrollTo=QpOVmbUjR8De" target="_blank">Google Colab</a>.
 
 ## Note:
 
