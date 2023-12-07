@@ -1,7 +1,11 @@
 # Google Sheet CV Generator : sheets2CV
 
 This Python script is designed to help users fetch CV (Curriculum Vitae) data from a Google Sheet and generate a PDF version of the CV using the ReportLab Python library.
-![Example CV](https://github.com/karinmcode/sheets2CV/blob/main/example_cv.png?raw=true)
+
+<div align="center">
+    <img src="https://github.com/karinmcode/sheets2CV/blob/main/icons/example_cv.png?raw=true" width="400">
+</div>
+
 ## How it works:
 
 1. **Fetching Data from Google Sheet**: The code fetches CV data from a Google Sheet, converting the Google Sheet into a pandas DataFrame. The user can provide a Google Sheet ID as an argument, or a default ID is used if not provided.
